@@ -1,20 +1,19 @@
-import argparse
 import os
 import time
 
 from mcli.sdk import update_run_metadata
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--n', type=int, required=True)
-args = parser.parse_args()
-
+steps = 60
 run_name = os.environ.get('RUN_NAME')
 
-metadata = {
-    "step": args.n,
-    "wallclock/remaining_estimate": f"{60 - args.n} seconds",
-}
-update_run_metadata(run_name, metadata)
-print(f"{args.n}: Updated metadata for {run_name} {metadata}")
+for step in range(steps):
 
-time.sleep(1)
+    metadata = {
+        "step": step,
+        "last_updated": time.time(),
+        "wallclock/remaining_estimate": f"{steps - step} seconds",
+    }
+    update_run_metadata(run_name, metadata)
+    print(f"{step}: Updated metadata for {run_name} {metadata}")
+
+    time.sleep(1)
